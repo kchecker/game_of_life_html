@@ -156,21 +156,22 @@
 			function count_of_living_neighbours(i,j)
 			{
 				//console.log(i+","+j)
+				//c is storing the count of living neighbours for the cell i,j
 				c = 0;
-				if (i!=0)
+				if (i!=0) //if the cell is not in the first row, check 3 cells above the cell at i,j
 				{
 					c+=gr[i-1][j];
-					if (j!=0)
+					if (j!=0) //check if the cell is not in the first column 
 						c+=gr[i-1][j-1];
-					if (j!=COLS-1)
+					if (j!=COLS-1)//check if the cell is not in the last column 
 						c+=gr[i-1][j+1];
 				}
 				if (i!=ROWS-1)
 				{
 					c+=gr[i+1][j];
-					if (j!=0)
+					if (j!=0) //check if the cell is not in the first column 
 						c+=gr[i+1][j-1];
-					if (j!=COLS-1)
+					if (j!=COLS-1) //check if the cell is not in the last column 
 						c+=gr[i+1][j+1];
 				}
 				if (j!=0)
@@ -197,11 +198,11 @@
 		<div class="wrapper">
 		</div>
 		<div class="controllers">
-			<button id="clear_button" onclick="clearwrapper()">Clear</button><br>
-			<button id="init_button" onclick="initgrid()">Initialize</button><br>
-			<button id="initglider_button" onclick="initglider()">Initialize Glider</button><br>
-			<button id="next_button" onclick="nextgen()">Next</button><br>
-			<button id="auto_button" onclick="autoplay()">AutoPlay</button>
+			<button id="clear_button" onclick="clearwrapper()">Clear</button>- Ckears the section on the left <br>
+			<button id="init_button" onclick="initgrid()">Initialize</button>- Initialize a random pattern<br>
+			<button id="initglider_button" onclick="initglider()">Initialize Glider</button>- Initialize a glider structure<br>
+			<button id="next_button" onclick="nextgen()">Next</button>- Step into the next generation<br>
+			<button id="auto_button" onclick="autoplay()">AutoPlay- Play/Pause the next generation at 1 second interval</button>
 		</div>
 	</body>
 </html>
