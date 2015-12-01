@@ -1,0 +1,207 @@
+<html>
+	<head>
+		<title>Game of Life</title>
+		<style>
+		body
+		{
+			margin:0;
+			padding:0;
+		}
+		.wrapper
+		{
+			width:60%;
+			height:100%;
+			border:1px solid black;
+			overflow-y:scroll;
+			overflow-x:auto;
+			white-space:nowrap;
+			float:left;
+		}
+		.controllers
+		{
+			width:35%;
+			height:100%;
+			border:1px solid black;
+			float:left;
+		}
+		.blackbox
+		{
+			width:10px;
+			height:10px;
+			background:black;
+			border:1px solid grey;
+			display:inline-block;
+		}
+		.whitebox 
+		{
+			width:10px;
+			height:10px;
+			background:white;
+			border:1px solid grey;
+			display:inline-block;
+		}
+		</style>
+		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+		<script>
+			var gr, tr;
+			var ROWS = 20, COLS = 20;
+			var gen = 0;
+			var timer = null;
+			var auto = false;
+			function initgrid()
+			{
+				gr = new Array();
+				tr = new Array();
+				for (i=0;i<ROWS;i++)
+				{
+					gr[i] = new Array();
+					tr[i] = new Array();
+					for (j=0;j<COLS;j++)
+					{
+						gr[i][j] = (Math.random()<0.5)?0:1;
+						tr[i][j] = 0;
+					}
+
+				}	
+				gen = 0;
+				drawgrid();
+			}
+
+			function initglider()
+			{
+				gr = new Array();
+				tr = new Array();
+				for (i=0;i<ROWS;i++)
+				{
+					gr[i] = new Array();
+					tr[i] = new Array();
+					for (j=0;j<COLS;j++)
+					{
+						gr[i][j] = 0;
+						tr[i][j] = 0;
+					}
+
+				}	
+				gen = 0;
+				gr[0][0] = 1;
+				gr[0][2] = 1;
+				gr[1][1] = 1;
+				gr[1][2] = 1;
+				gr[2][1] = 1;
+
+				drawgrid();
+			}
+
+			function drawgrid()
+			{
+				//empty the wrapper
+				$(".wrapper").HTML = "";
+				//draw all items on the grid 
+				$(".wrapper").append("<br>Generation "+gen+" <br>");
+				for (i=0;i<ROWS;i++)
+				{
+					for (j=0;j<COLS;j++)
+					{
+						if (gr[i][j]==0)
+							$(".wrapper").append("<div class='whitebox'></div>")
+						else 
+							$(".wrapper").append("<div class='blackbox'></div>")
+						
+					}	
+					$(".wrapper").append("<div style='clear:both'></div>")
+				}
+				$(".wrapper").scrollTop( $(".wrapper").prop('scrollHeight'));
+			}
+
+			function nextgen()
+			{
+				console.log("in next gen");
+				//Fill out the temp grid 
+				for (i=0;i<ROWS;i++)
+				{
+					for (j=0;j<COLS;j++)
+					{
+						tr[i][j] = 0;
+						neighbourscount = count_of_living_neighbours(i,j);
+						if (gr[i][j]==1)
+						{
+							if (neighbourscount<2||neighbourscount>3)
+								tr[i][j] = 0;
+							else 
+								tr[i][j] = 1;
+						}
+						else
+						{
+							if (neighbourscount==3)	
+								tr[i][j]=1;
+						}
+					}
+				}	
+
+				//Copy the grid into main 
+				for (i=0;i<ROWS;i++)
+				{
+					for (j=0;j<COLS;j++)
+					{
+						gr[i][j] = tr[i][j];
+					}
+				}
+				gen++;
+				drawgrid();
+				if (auto)
+					timer = setTimeout("nextgen()", 1000);
+
+			}
+
+			function count_of_living_neighbours(i,j)
+			{
+				//console.log(i+","+j)
+				c = 0;
+				if (i!=0)
+				{
+					c+=gr[i-1][j];
+					if (j!=0)
+						c+=gr[i-1][j-1];
+					if (j!=COLS-1)
+						c+=gr[i-1][j+1];
+				}
+				if (i!=ROWS-1)
+				{
+					c+=gr[i+1][j];
+					if (j!=0)
+						c+=gr[i+1][j-1];
+					if (j!=COLS-1)
+						c+=gr[i+1][j+1];
+				}
+				if (j!=0)
+					c+=gr[i][j-1];
+				if (j!=COLS-1)
+					c+=gr[i][j+1];
+
+				return c;
+			}
+
+			function autoplay()
+			{
+				auto = !(auto);
+				if (auto) nextgen();
+			}
+
+			function clearwrapper()
+			{
+				$(".wrapper").empty();
+			}
+		</script>
+	</head>
+	<body>
+		<div class="wrapper">
+		</div>
+		<div class="controllers">
+			<button id="clear_button" onclick="clearwrapper()">Clear</button><br>
+			<button id="init_button" onclick="initgrid()">Initialize</button><br>
+			<button id="initglider_button" onclick="initglider()">Initialize Glider</button><br>
+			<button id="next_button" onclick="nextgen()">Next</button><br>
+			<button id="auto_button" onclick="autoplay()">AutoPlay</button>
+		</div>
+	</body>
+</html>
