@@ -94,10 +94,10 @@
 
 			function drawgrid()
 			{
-				//empty the wrapper
-				$(".wrapper").HTML = "";
 				//draw all items on the grid 
+				//Draw the generation number 
 				$(".wrapper").append("<br>Generation "+gen+" <br>");
+				//Draw the grid for the world 
 				for (i=0;i<ROWS;i++)
 				{
 					for (j=0;j<COLS;j++)
